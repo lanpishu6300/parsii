@@ -8,6 +8,8 @@
 
 package parsii.eval;
 
+import com.dianping.appkit.utils.VersionUtil;
+
 /**
  * Represents a binary operation.
  * <p>
@@ -22,7 +24,7 @@ public class BinaryOperation extends Expression {
      * Enumerates the operations supported by this expression.
      */
     public enum Op {
-        ADD(3), SUBTRACT(3), MULTIPLY(4), DIVIDE(4), MODULO(4), POWER(5), LT(2), LT_EQ(2), EQ(2), GT_EQ(2), GT(2), NEQ(2), AND(
+        ADD(3), SUBTRACT(3), MULTIPLY(4), DIVIDE(4), MODULO(4), POWER(5), NOT(6),LT(2), LT_EQ(2), EQ(2), GT_EQ(2), GT(2), NEQ(2), AND(
                 1), OR(1);
 
         public int getPriority() {
@@ -116,52 +118,78 @@ public class BinaryOperation extends Expression {
     }
 
     @Override
-    public double evaluate() {
-        double a = left.evaluate();
-        double b = right.evaluate();
-        if (op == Op.ADD) {
-            return a + b;
-        }
-        if (op == Op.SUBTRACT) {
-            return a - b;
-        }
-        if (op == Op.MULTIPLY) {
-            return a * b;
-        }
-        if (op == Op.DIVIDE) {
-            return a / b;
-        }
-        if (op == Op.POWER) {
-            return Math.pow(a, b);
-        }
-        if (op == Op.MODULO) {
-            return a % b;
-        }
-        if (op == Op.LT) {
-            return a < b ? 1 : 0;
-        }
-        if (op == Op.LT_EQ) {
-            return a < b || Math.abs(a - b) < EPSILON ? 1 : 0;
-        }
-        if (op == Op.GT) {
-            return a > b ? 1 : 0;
-        }
-        if (op == Op.GT_EQ) {
-            return a > b || Math.abs(a - b) < EPSILON ? 1 : 0;
-        }
-        if (op == Op.EQ) {
-            return Math.abs(a - b) < EPSILON ? 1 : 0;
-        }
-        if (op == Op.NEQ) {
-            return Math.abs(a - b) > EPSILON ? 1 : 0;
-        }
-        if (op == Op.AND) {
-            return Math.abs(a) > 0 && Math.abs(b) > 0 ? 1 : 0;
-        }
-        if (op == Op.OR) {
-            return Math.abs(a) > 0 || Math.abs(b) > 0 ? 1 : 0;
-        }
+    public Double evaluate() {
+        Object a = left.evaluate();
+        Object b = right.evaluate();
+//        if (op == Op.ADD) {
+//            return a + b;
+//        }
+//        if (op == Op.SUBTRACT) {
+//            return a - b;
+//        }
+//        if (op == Op.MULTIPLY) {
+//            return a * b;
+//        }
+//        if (op == Op.DIVIDE) {
+//            return a / b;
+//        }
+//        if (op == Op.POWER) {
+//            return Math.pow(a, b);
+//        }
+//        if (op == Op.MODULO) {
+//            return a % b;
+//        }
 
+        if(a instanceof Double && b instanceof Double) {
+            double c = (Double)a;
+            double d = (Double)b;
+            if (op == Op.LT) {
+                return  c < d ? 1d : 0;
+            }
+            if (op == Op.LT_EQ) {
+                return c < d || Math.abs(c - d) < EPSILON ? 1d : 0;
+            }
+            if (op == Op.GT) {
+                return c > d ? 1d : 0;
+            }
+            if (op == Op.GT_EQ) {
+                return c > d || Math.abs(c - d) < EPSILON ? 1d : 0;
+            }
+            if (op == Op.EQ) {
+                return Math.abs(c - d) < EPSILON ? 1d : 0;
+            }
+            if (op == Op.NEQ) {
+                return Math.abs(c - d) > EPSILON ? 1d : 0;
+            }
+            if (op == Op.AND) {
+                return Math.abs(c) > 0 && Math.abs(d) > 0 ? 1d : 0;
+            }
+            if (op == Op.OR) {
+                return Math.abs(c) > 0 || Math.abs(d ) > 0 ? 1d : 0;
+            }
+        }else {
+            int compare = VersionUtil.compare(a.toString(), b.toString());
+
+
+            if (op == Op.LT) {
+                return  compare < 0 ? 1d : 0;
+            }
+            if (op == Op.LT_EQ) {
+                return compare < 0 || compare == 0 ? 1d : 0;
+            }
+            if (op == Op.GT) {
+                return compare > 0 ? 1d : 0;
+            }
+            if (op == Op.GT_EQ) {
+                return compare == 0 || compare > 0 ? 1d : 0;
+            }
+            if (op == Op.EQ) {
+                return compare == 0 ? 1d : 0;
+            }
+            if (op == Op.NEQ) {
+                return compare != 0 ? 1d : 0;
+            }
+        }
         throw new UnsupportedOperationException(String.valueOf(op));
     }
 
@@ -191,16 +219,16 @@ public class BinaryOperation extends Expression {
                         // Left side is constant, we therefore can combine constants. We can rely on the constant
                         // being on the left side, since we reorder commutative operations (see above)
                         if (childOp.left.isConstant()) {
-                            if (op == Op.ADD) {
-                                return new BinaryOperation(op,
-                                                           new Constant(left.evaluate() + childOp.left.evaluate()),
-                                                           childOp.right);
-                            }
-                            if (op == Op.MULTIPLY) {
-                                return new BinaryOperation(op,
-                                                           new Constant(left.evaluate() * childOp.left.evaluate()),
-                                                           childOp.right);
-                            }
+//                            if (op == Op.ADD) {
+//                                return new BinaryOperation(op,
+//                                                           new Constant(left.evaluate() + childOp.left.evaluate()),
+//                                                           childOp.right);
+//                            }
+//                            if (op == Op.MULTIPLY) {
+//                                return new BinaryOperation(op,
+//                                                           new Constant(left.evaluate() * childOp.left.evaluate()),
+//                                                           childOp.right);
+//                            }
                         }
                     } else if (childOp.left.isConstant()) {
                         // Since our left side is non constant, but the left side of the child expression is,

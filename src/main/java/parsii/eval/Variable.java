@@ -22,6 +22,9 @@ public class Variable {
     private String name;
     private boolean constant = false;
 
+    private String stringValue;
+
+
     /**
      * Creates a new variable.
      * <p>
@@ -98,5 +101,13 @@ public class Variable {
     public Variable withValue(double value) {
         setValue(value);
         return this;
+    }
+
+    public String getStringValue() {
+        return stringValue;
+    }
+
+    public void setStringValue(String stringValue) {
+        this.stringValue = stringValue;
     }
 }

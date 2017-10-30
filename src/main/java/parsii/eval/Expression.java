@@ -24,7 +24,7 @@ public abstract class Expression implements Serializable {
      *
      * @return the double value as a result of evaluating this expression. Returns NaN if an error occurs
      */
-    public abstract double evaluate();
+    public abstract Object evaluate();
 
     /**
      * Returns a simplified version of this expression.

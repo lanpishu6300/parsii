@@ -24,7 +24,7 @@ public abstract class UnaryFunction implements Function {
 
     @Override
     public double eval(List<Expression> args) {
-        double a = args.get(0).evaluate();
+    double a = (Double)(args.get(0).evaluate());
         if (Double.isNaN(a)) {
             return a;
         }

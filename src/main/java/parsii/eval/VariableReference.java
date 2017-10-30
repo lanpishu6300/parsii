@@ -26,7 +26,8 @@ public class VariableReference extends Expression {
     }
 
     @Override
-    public double evaluate() {
+    public Object evaluate() {
+        if(var.getStringValue() !=null) return var.getStringValue();
         return var.getValue();
     }
 
@@ -43,7 +44,7 @@ public class VariableReference extends Expression {
     @Override
     public Expression simplify() {
         if (isConstant()) {
-            return new Constant(evaluate());
+            return new VersionString((String)evaluate());
         }
         return this;
     }

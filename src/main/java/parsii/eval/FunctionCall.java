@@ -21,7 +21,7 @@ public class FunctionCall extends Expression {
     private Function function;
 
     @Override
-    public double evaluate() {
+    public Double evaluate() {
         return function.eval(parameters);
     }
 

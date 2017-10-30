@@ -11,28 +11,28 @@ package parsii.eval;
 /**
  * Represents a constant numeric expression.
  */
-public class Constant extends Expression {
+public class VersionString extends Expression {
     private static final long serialVersionUID = 7461494011371773146L;
 
-    private double value;
+    private String value;
 
     /**
      * Used as dummy expression by the parser if an error occurs while parsing.
      */
-    public static final Constant EMPTY = new Constant(Double.NaN);
+    public static final VersionString EMPTY = new VersionString("");
 
-    public Constant(double value) {
+    public VersionString(String value) {
         this.value = value;
     }
 
     @Override
-    public Double evaluate() {
+    public String evaluate() {
         return value;
     }
 
     @Override
     public boolean isConstant() {
-        return true;
+        return false;
     }
 
     @Override

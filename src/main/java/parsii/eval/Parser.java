@@ -218,7 +218,7 @@ public class Parser implements Serializable {
             Expression right = relationalExpression();
             return reOrder(left, right, BinaryOperation.Op.LT_EQ);
         }
-        if (tokenizer.current().isSymbol("=")) {
+        if (tokenizer.current().isSymbol("==")) {
             tokenizer.consume();
             Expression right = relationalExpression();
             return reOrder(left, right, BinaryOperation.Op.EQ);
@@ -437,10 +437,24 @@ public class Parser implements Serializable {
             }
             return new Constant(value);
         }
+
+        return versionString();
+
+
+    }
+
+    private Expression versionString() {
+
+        if(tokenizer.current().isString()){
+            Token token = tokenizer.consume();
+         return new VersionString(token.getContents());
+        }
+
+
         Token token = tokenizer.consume();
         errors.add(ParseError.error(token,
-                                    String.format("Unexpected token: '%s'. Expected an expression.",
-                                                  token.getSource())));
+                String.format("Unexpected token: '%s'. Expected an expression.",
+                        token.getSource())));
         return Constant.EMPTY;
     }
 
